@@ -54,7 +54,7 @@ export default class GameOfLife extends React.Component {
 
   }
 
-  setTimer(speed) {
+  updateTimer(speed) {
     if (this.state.interval) {
       clearInterval(this.state.interval)
     }
@@ -99,7 +99,7 @@ export default class GameOfLife extends React.Component {
       this.setState({
         startingGrid: deepCopySquares(this.state.squares)
       })
-      this.setTimer(this.state.speed);
+      this.updateTimer(this.state.speed);
     }
 
     this.setState({
@@ -153,7 +153,7 @@ export default class GameOfLife extends React.Component {
         <button onClick={() => this.randomise()}>Random</button>
         <br/>
         <label htmlFor="speed-slider">Speed</label>
-        <input type="range" min="1" max="20" defaultValue={this.state.speed} step="1" id="speed-slider" onChange={(event) => this.setTimer(event.currentTarget.value)}/>
+        <input type="range" min="1" max="20" defaultValue={this.state.speed} step="1" id="speed-slider" onChange={(event) => this.updateTimer(event.currentTarget.value)}/>
         <p>Step [{this.state.step}]</p>
         <p>Speed: {this.state.speed}</p>
       </div>
