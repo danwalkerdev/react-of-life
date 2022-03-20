@@ -11,7 +11,8 @@ export default class GameOfLife extends React.Component {
       squares: squares,
       running: false,
       startingGrid: this.deepCopySquares(squares),
-      mouseDown: false
+      mouseDown: false,
+      speed: 10
     }
   }
 
@@ -24,12 +25,6 @@ export default class GameOfLife extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
-      if (this.state.running) {
-        this.stepForward()
-      }
-    }, 500);
-
     document.body.onmousedown = () => {
       this.setState({
         mouseDown: true
@@ -60,6 +55,23 @@ export default class GameOfLife extends React.Component {
       squares: squares
     })
 
+  }
+
+  setTimer(speed) {
+    if (this.state.interval) {
+      clearInterval(this.state.interval)
+    }
+
+    let interval = setInterval(() => {
+      if (this.state.running) {
+        this.stepForward()
+      }
+    }, 1000 / speed);
+    
+    this.setState({
+      interval: interval,
+      speed: speed
+    })
   }
 
   deepCopySquares(inputSquares) {
@@ -121,7 +133,9 @@ export default class GameOfLife extends React.Component {
       this.setState({
         startingGrid: this.deepCopySquares(this.state.squares)
       })
+      this.setTimer(this.state.speed);
     }
+
 
     this.setState({
       running: !this.state.running
@@ -141,22 +155,26 @@ export default class GameOfLife extends React.Component {
       squares: this.deepCopySquares(this.state.startingGrid),
       running: false,
       step: 0
-    }) 
+    })
   }
 
   render() {
     return (
       <div>
-        <Grid 
-          onClick={(i, j) => this.onSquareClick(i, j)} 
+        <Grid
+          onClick={(i, j) => this.onSquareClick(i, j)}
           onMouseOver={(i, j) => this.onMouseOver(i, j)}
-          size={this.props.size} 
+          size={this.props.size}
           squares={this.state.squares} />
         <button onClick={() => this.startOrStop()}>{this.state.running ? "Stop" : "Start"}</button>
         <button onClick={() => this.stepForward()} disabled={this.state.running}>Step</button>
-        <button onClick={()=> this.reset()} disabled={this.state.running}>Reset</button>
+        <button onClick={() => this.reset()} disabled={this.state.running}>Reset</button>
         <button onClick={() => this.clearGrid()} disabled={this.state.running}>Clear</button>
+        <br/>
+        <label htmlFor="speed-slider">Speed</label>
+        <input type="range" min="1" max="20" defaultValue={this.state.speed} step="1" id="speed-slider" onChange={(event) => this.setTimer(event.currentTarget.value)}/>
         <p>Step [{this.state.step}]</p>
+        <p>Speed: {this.state.speed}</p>
       </div>
     )
   }
