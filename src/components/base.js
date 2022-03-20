@@ -6,7 +6,8 @@ class Square extends React.Component {
     return (
       <s 
         className={`${this.props.live ? "live" : ""}`}
-        onClick={() => this.props.onClick(this.props.row, this.props.col)}></s>
+        onClick={() => this.props.onClick(this.props.row, this.props.col)}
+        onMouseOver={() => this.props.onMouseOver(this.props.row, this.props.col)}></s>
     )
   }
 }
@@ -28,6 +29,7 @@ class Grid extends React.Component {
           col={j}
           live={this.props.squares[i][j]}
           onClick={(i, j) => this.props.onClick(i, j)}
+          onMouseOver={(i, j) => this.props.onMouseOver(i, j)}
           />))
       }
       rows.push(<div key={i}>{cols}</div>)
@@ -37,7 +39,6 @@ class Grid extends React.Component {
 }
 
 export {
-  Square,
   Grid
 }
 

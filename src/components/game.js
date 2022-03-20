@@ -5,10 +5,13 @@ export default class GameOfLife extends React.Component {
 
   constructor(props) {
     super(props);
+    const squares = this.initBackingArray();
     this.state = {
       step: 0,
-      squares: this.initBackingArray(),
-      running: false
+      squares: squares,
+      running: false,
+      startingGrid: this.deepCopySquares(squares),
+      mouseDown: false
     }
   }
 
@@ -26,11 +29,22 @@ export default class GameOfLife extends React.Component {
         this.stepForward()
       }
     }, 500);
+
+    document.body.onmousedown = () => {
+      this.setState({
+        mouseDown: true
+      });
+    }
+
+    document.body.onmouseup = () => {
+      this.setState({
+        mouseDown: false
+      });
+    }
   }
 
   stepForward() {
-    // process each square in grid
-    const squares = this.deepCopySquares();
+    const squares = this.deepCopySquares(this.state.squares);
     for (let i = 0; i < this.props.size; i++) {
       for (let j = 0; j < this.props.size; j++) {
         if (this.state.squares[i][j]) {
@@ -41,8 +55,6 @@ export default class GameOfLife extends React.Component {
       }
     }
 
-    // save new state
-
     this.setState({
       step: this.state.step + 1,
       squares: squares
@@ -50,10 +62,10 @@ export default class GameOfLife extends React.Component {
 
   }
 
-  deepCopySquares() {
+  deepCopySquares(inputSquares) {
     const squares = Array(this.props.size)
     for (let i = 0; i < squares.length; i++) {
-      squares[i] = [...this.state.squares[i]];
+      squares[i] = [...inputSquares[i]];
     }
     return squares;
   }
@@ -97,19 +109,54 @@ export default class GameOfLife extends React.Component {
     })
   }
 
+  onMouseOver(i, j) {
+    if (this.state.mouseDown) {
+      this.onSquareClick(i, j)
+    }
+  }
+
   startOrStop() {
+    if (!this.state.running && this.state.step === 0) {
+      // save start configuration
+      this.setState({
+        startingGrid: this.deepCopySquares(this.state.squares)
+      })
+    }
+
     this.setState({
       running: !this.state.running
     })
   }
 
+  clearGrid() {
+    this.setState({
+      squares: this.initBackingArray(),
+      running: false,
+      step: 0
+    })
+  }
+
+  reset() {
+    this.setState({
+      squares: this.deepCopySquares(this.state.startingGrid),
+      running: false,
+      step: 0
+    }) 
+  }
+
   render() {
     return (
       <div>
-        <Grid onClick={(i, j) => this.onSquareClick(i, j)} size={this.props.size} squares={this.state.squares} />
-        <button onClick={() => this.stepForward()}>Step forward</button>
+        <Grid 
+          onClick={(i, j) => this.onSquareClick(i, j)} 
+          onMouseOver={(i, j) => this.onMouseOver(i, j)}
+          size={this.props.size} 
+          squares={this.state.squares} />
         <button onClick={() => this.startOrStop()}>{this.state.running ? "Stop" : "Start"}</button>
-        <p>Step {this.state.step}</p>
+        <button onClick={() => this.stepForward()} disabled={this.state.running}>Step</button>
+        <button onClick={()=> this.reset()} disabled={this.state.running}>Reset</button>
+        <button onClick={() => this.clearGrid()} disabled={this.state.running}>Clear</button>
+        <p>Step [{this.state.step}]</p>
       </div>
     )
   }
