@@ -34,7 +34,7 @@ class Grid extends React.Component {
       }
       rows.push(<div key={i}>{cols}</div>)
     }
-    return rows;
+    return <div className="grid">{rows}</div>;
   }
 }
 

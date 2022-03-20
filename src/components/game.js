@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "./base";
+import { Grid } from "./grid";
 import { getNeighbours, deepCopySquares } from "../util/core";
 
 export default class GameOfLife extends React.Component {
