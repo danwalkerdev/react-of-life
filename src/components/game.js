@@ -13,7 +13,8 @@ export default class GameOfLife extends React.Component {
       running: false,
       startingGrid: deepCopySquares(squares),
       mouseDown: false,
-      speed: 10
+      speed: 10,
+      red: true
     }
   }
 
@@ -138,19 +139,27 @@ export default class GameOfLife extends React.Component {
     })
   }
 
+  changeColour() {
+    this.setState({
+      red: !this.state.red
+    })
+  }
+
   render() {
     return (
       <div>
         <Grid
           onClick={(i, j) => this.onSquareClick(i, j)}
           onMouseOver={(i, j) => this.onMouseOver(i, j)}
+          colour={this.state.red}
           size={this.props.size}
           squares={this.state.squares} />
         <button onClick={() => this.startOrStop()}>{this.state.running ? "Stop" : "Start"}</button>
         <button onClick={() => this.stepForward()} disabled={this.state.running}>Step</button>
         <button onClick={() => this.reset()} disabled={this.state.running}>Reset</button>
         <button onClick={() => this.clearGrid()} disabled={this.state.running}>Clear</button>
-        <button onClick={() => this.randomise()}>Random</button>
+        <button onClick={() => this.randomise()} disabled={this.state.running}>Random</button>
+        <button onClick={() => this.changeColour()}>Alt colour</button>
         <br/>
         <label htmlFor="speed-slider">Speed</label>
         <input type="range" min="1" max="20" defaultValue={this.state.speed} step="1" id="speed-slider" onChange={(event) => this.updateTimer(event.currentTarget.value)}/>
