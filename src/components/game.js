@@ -1,12 +1,12 @@
 import React from "react";
 import { Grid } from "./grid";
-import { getNeighbours, deepCopySquares } from "../util/core";
+import { getNeighbours, deepCopySquares, initBackingArray } from "../util/core";
 
 export default class GameOfLife extends React.Component {
 
   constructor(props) {
     super(props);
-    const squares = this.initBackingArray();
+    const squares = initBackingArray(this.props.size);
     this.state = {
       step: 0,
       squares: squares,
@@ -16,14 +16,6 @@ export default class GameOfLife extends React.Component {
       speed: 10,
       red: true
     }
-  }
-
-  initBackingArray() {
-    let rows = Array(this.props.size);
-    for (let i = 0; i < rows.length; i++) {
-      rows[i] = Array(this.props.size).fill(false);
-    }
-    return rows;
   }
 
   componentDidMount() {
@@ -77,7 +69,7 @@ export default class GameOfLife extends React.Component {
 
     const liveNeighbours = neighbours.filter(e => !!e);
 
-    return liveNeighbours.length === 3 || (liveNeighbours.length == 2 && this.state.squares[row][col]);
+    return liveNeighbours.length === 3 || (liveNeighbours.length === 2 && this.state.squares[row][col]);
   }
 
   onSquareClick(i, j) {
@@ -95,22 +87,37 @@ export default class GameOfLife extends React.Component {
   }
 
   startOrStop() {
-    if (!this.state.running && this.state.step === 0) {
-      // save start configuration
+    if (this.state.running) {
+      this.stop();
+    } else {
+      this.start();
+    }
+  }
+
+  start() {
+    if (this.state.step === 0) {
       this.setState({
         startingGrid: deepCopySquares(this.state.squares)
-      })
-      this.updateTimer(this.state.speed);
+      });
     }
 
+    this.updateTimer(this.state.speed);
+
     this.setState({
-      running: !this.state.running
+      running: true
     })
+  }
+
+  stop() {
+    clearInterval(this.state.interval);
+    this.setState({
+      running: false
+    });
   }
 
   clearGrid() {
     this.setState({
-      squares: this.initBackingArray(),
+      squares: initBackingArray(this.props.size),
       running: false,
       step: 0
     })
@@ -151,7 +158,7 @@ export default class GameOfLife extends React.Component {
         <Grid
           onClick={(i, j) => this.onSquareClick(i, j)}
           onMouseOver={(i, j) => this.onMouseOver(i, j)}
-          colour={this.state.red}
+          red={this.state.red}
           size={this.props.size}
           squares={this.state.squares} />
         <button onClick={() => this.startOrStop()}>{this.state.running ? "Stop" : "Start"}</button>

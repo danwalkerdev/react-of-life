@@ -7,16 +7,14 @@ s {
 }
 
 s.live {
-  /* background: rgb(255,40,0); */
-  /* background: radial-gradient(circle, rgba(255,40,0,1) 0%, rgba(255,100,71,1) 75%, rgba(255,223,223,1) 100%); */
   background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 75%, rgba(255,223,223,1) 100%);
 }
 
-s.live.red {
+#grid.red s.live {
   background-color: rgb(255,40,0);
 }
 
-s.live.blue {
+#grid.blue s.live {
   background-color:  rgb(41, 158, 255);
 }
 
@@ -26,6 +24,6 @@ button {
   font-weight: bold;
 }
 
-.grid {
+#grid {
   white-space: nowrap;
 }

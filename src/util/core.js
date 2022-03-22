@@ -25,7 +25,16 @@ function deepCopySquares(inputSquares) {
   return squares;
 }
 
+function initBackingArray(size) {
+  let rows = Array(size);
+  for (let i = 0; i < rows.length; i++) {
+    rows[i] = Array(size).fill(false);
+  }
+  return rows;
+}
+
 export {
   getNeighbours,
-  deepCopySquares
+  deepCopySquares,
+  initBackingArray
 }
