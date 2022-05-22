@@ -3,7 +3,7 @@ import GameOfLife from './components/game'
 
 function App() {
   return (
-    <GameOfLife size={40}/>
+    <GameOfLife size={50}/>
   );
 }
 

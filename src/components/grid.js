@@ -10,9 +10,6 @@ function Square(props) {
 }
 
 class Grid extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const size = this.props.size;
@@ -31,7 +28,7 @@ class Grid extends React.Component {
       }
       rows.push(<div key={i}>{cols}</div>)
     }
-    return <div id="grid" className={`${this.props.red ? "red" : "blue"}`}>{rows}</div>;
+    return <div id="grid" className={`${this.props.color}`}>{rows}</div>;
   }
 }
 

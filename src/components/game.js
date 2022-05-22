@@ -14,7 +14,7 @@ export default class GameOfLife extends React.Component {
       startingGrid: deepCopySquares(squares),
       mouseDown: false,
       speed: 10,
-      red: true
+      color: "red"
     }
   }
 
@@ -136,7 +136,7 @@ export default class GameOfLife extends React.Component {
     for (let i = 0; i < rows.length; i++) {
       rows[i] = Array(this.props.size);
       for (let j = 0; j < rows[i].length; j++) {
-        rows[i][j] = Math.random() > 0.5;
+        rows[i][j] = Math.random() > 0.85;
       }
     }
     
@@ -146,9 +146,9 @@ export default class GameOfLife extends React.Component {
     })
   }
 
-  changeColour() {
+  changeColor(color) {
     this.setState({
-      red: !this.state.red
+      color: color
     })
   }
 
@@ -158,7 +158,7 @@ export default class GameOfLife extends React.Component {
         <Grid
           onClick={(i, j) => this.onSquareClick(i, j)}
           onMouseOver={(i, j) => this.onMouseOver(i, j)}
-          red={this.state.red}
+          color={this.state.color}
           size={this.props.size}
           squares={this.state.squares} />
         <button onClick={() => this.startOrStop()}>{this.state.running ? "Stop" : "Start"}</button>
@@ -166,7 +166,12 @@ export default class GameOfLife extends React.Component {
         <button onClick={() => this.reset()} disabled={this.state.running}>Reset</button>
         <button onClick={() => this.clearGrid()} disabled={this.state.running}>Clear</button>
         <button onClick={() => this.randomise()} disabled={this.state.running}>Random</button>
-        <button onClick={() => this.changeColour()}>Alt colour</button>
+        <button onClick={() => this.changeColor("red")}>Red</button>
+        <button onClick={() => this.changeColor("blue")}>Blue</button>
+        <button onClick={() => this.changeColor("green")}>Green</button>
+        <button onClick={() => this.changeColor("purple")}>Purple</button>
+        <button onClick={() => this.changeColor("yellow")}>Yellow</button>
+        
         <br/>
         <label htmlFor="speed-slider">Speed</label>
         <input type="range" min="1" max="20" defaultValue={this.state.speed} step="1" id="speed-slider" onChange={(event) => this.updateTimer(event.currentTarget.value)}/>

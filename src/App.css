@@ -10,12 +10,24 @@ s.live {
   background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 75%, rgba(255,223,223,1) 100%);
 }
 
-#grid.red s.live {
+.red s.live {
   background-color: rgb(255,40,0);
 }
 
-#grid.blue s.live {
+.blue s.live {
   background-color:  rgb(41, 158, 255);
+}
+
+.yellow s.live {
+  background-color:  rgb(255, 251, 22);
+}
+
+.green s.live {
+  background-color:  rgb(106, 255, 106);
+}
+
+.purple s.live {
+  background-color:  rgb(239, 117, 255);
 }
 
 button {
