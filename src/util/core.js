@@ -1,5 +1,5 @@
 /**
- * @param {Array<boolean>} squares Assumes a square grid passed in so that width and height are equal
+ * @param {Array<boolean>} squares Assumes a grid with at least one row is provided
  * @param {int} row Row of the square whose neighbours to find
  * @param {int} col Column of the square whose neighbours to find
  * @returns 
