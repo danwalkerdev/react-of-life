@@ -17,13 +17,22 @@ export default function GameOfLife(props) {
   const [proportion, setProportion] = useState(15);
 
   useEffect(() => {
-    document.body.onmousedown = () => {
-      setMouseDown(true);
-    }
-    window.onmouseup = () => {
+    const handleMouseUp = () => {
       setMouseDown(false);
+    };
+    const handleMouseDown = () => {
+      setMouseDown(true);
+    };
+
+    document.body.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.body.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
     }
-  });
+  }, []);
+
   useEffect(() => {
     if (currentInterval) {
       clearInterval(currentInterval);
