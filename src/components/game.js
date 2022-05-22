@@ -1,6 +1,5 @@
-import React from "react";
 import { Grid } from "./grid";
-import { getNeighbours, deepCopySquares, initBackingArray } from "../util/core";
+import { deepCopySquares, initBackingArray, getLiveNeighbors } from "../util/core";
 import { useState, useEffect } from "react";
 
 export default function GameOfLife(props) {
@@ -61,19 +60,14 @@ export default function GameOfLife(props) {
   }
 
   const isCellAliveOnNextStep = (row, col, currentSquares) => {
-    const neighbours = getNeighbours(currentSquares, row, col);
-
-    const liveNeighbours = neighbours.filter(e => !!e);
-
+    const liveNeighbours = getLiveNeighbors(currentSquares, row, col);
     return liveNeighbours.length === 3 || (liveNeighbours.length === 2 && currentSquares[row][col]);
   }
 
   const handleSquareClick = (i, j) => {
     const squaresCopy = squares.slice();
     squaresCopy[i][j] = !squaresCopy[i][j]
-
     setSquares(squaresCopy);
-
   }
 
   const handleMouseOver = (i, j) => {
@@ -94,9 +88,7 @@ export default function GameOfLife(props) {
     if (step === 0) {
       setStartingGrid(deepCopySquares(squares));
     }
-
     setRunning(true);
-
   }
 
   const stop = () => {

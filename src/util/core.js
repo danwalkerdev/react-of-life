@@ -4,20 +4,29 @@
  * @param {int} col Column of the square whose neighbours to find
  * @returns 
  */
-function getNeighbours(squares, row, col) {
+function getLiveNeighbors(squares, row, col) {
   const height = squares.length;
   const width = squares[0].length;
 
-  const up = row > 0 ? squares[row - 1][col] : null;
-  const down = row < height - 1 ? squares[row + 1][col] : null;
-  const left = col > 0 ? squares[row][col - 1] : null;
-  const right = col < width - 1 ? squares[row][col + 1] : null;
-  const upLeft = row > 0 && col > 0 ? squares[row - 1][col - 1] : null;
-  const upRight = row > 0 && col < width - 1 ? squares[row - 1][col + 1] : null;
-  const downLeft = row < height - 1 && col > 0 ? squares[row + 1][col - 1] : null;
-  const downRight = row < height - 1 && col < width - 1 ? squares[row + 1][col + 1] : null;
+  const neighbors = [];
 
-  return [up, down, left, right, upLeft, upRight, downLeft, downRight].filter(e => e != null);
+  for (let x of [-1, 0, 1]) {
+    for (let y of [-1, 0, 1]) {
+      if (x == 0 && x == y) { // ignore self
+        continue;
+      }
+      if (row + x < 0 || row + x >= height) {
+        continue;
+      }
+      if (col + y < 0 || col + y >= width) {
+        continue;
+      }
+
+      let neighbor = squares[row + x][col + y];
+      if (neighbor) neighbors.push(neighbor);
+    }
+  }
+  return neighbors;
 }
 
 function deepCopySquares(inputSquares) {
@@ -37,7 +46,7 @@ function initBackingArray(width, height) {
 }
 
 export {
-  getNeighbours,
+  getLiveNeighbors,
   deepCopySquares,
   initBackingArray
 }
