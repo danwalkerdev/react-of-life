@@ -10,11 +10,10 @@ function Square(props) {
 }
 
 function Grid(props) {
-  const size = props.size;
   const rows = []
-  for (let i = 0; i < size; i++) {
-    const cols = []
-    for (let j = 0; j < size; j++) {
+  for (let i = 0; i < props.height; i++) {
+    const cols = [];
+    for (let j = 0; j < props.width; j++) {
       cols.push((<Square
         key={`${i},${j}`}
         row={i}

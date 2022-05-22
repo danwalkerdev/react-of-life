@@ -4,7 +4,7 @@ import { getNeighbours, deepCopySquares, initBackingArray } from "../util/core";
 import { useState, useEffect } from "react";
 
 export default function GameOfLife(props) {
-  const initialSquares = initBackingArray(props.size);
+  const initialSquares = initBackingArray(props.width, props.height);
 
   const [step, setStep] = useState(0);
   const [squares, setSquares] = useState(initialSquares);
@@ -14,41 +14,40 @@ export default function GameOfLife(props) {
   const [color, setColor] = useState('red');
   const [startingGrid, setStartingGrid] = useState(deepCopySquares(initialSquares));
   const [currentInterval, setCurrentInterval] = useState(null);
+  const [proportion, setProportion] = useState(15);
 
   useEffect(() => {
     document.body.onmousedown = () => {
       setMouseDown(true);
     }
-  });
-  useEffect(() => {
-    document.body.onmouseup = () => {
+    window.onmouseup = () => {
       setMouseDown(false);
     }
   });
+  useEffect(() => {
+    if (currentInterval) {
+      clearInterval(currentInterval);
+    }
+    if (running) {
+      let newInterval = setInterval(() => {
+        stepForward();
+      }, 1000 / speed);
+      setCurrentInterval(newInterval);
+    }
+
+  }, [running, speed]);
 
   const stepForward = () => {
     setStep(currentStep => currentStep + 1);
     setSquares(currentSquares => {
       const newSquares = deepCopySquares(currentSquares);
-      for (let i = 0; i < props.size; i++) {
-        for (let j = 0; j < props.size; j++) {
+      for (let i = 0; i < props.height; i++) {
+        for (let j = 0; j < props.width; j++) {
           newSquares[i][j] = isCellAliveOnNextStep(i, j, currentSquares);
         }
       }
       return newSquares;
     });
-
-  }
-
-  const updateTimer = (speed) => {
-    if (currentInterval) {
-      clearInterval(currentInterval)
-    }
-
-    let newInterval = setInterval(() => stepForward(), 1000 / speed);
-
-    setCurrentInterval(newInterval);
-    setSpeed(speed);
 
   }
 
@@ -88,17 +87,15 @@ export default function GameOfLife(props) {
     }
 
     setRunning(true);
-    updateTimer(speed);
 
   }
 
   const stop = () => {
     setRunning(false);
-    clearInterval(currentInterval);
   }
 
   const clearGrid = () => {
-    setSquares(initBackingArray(props.size));
+    setSquares(initBackingArray(props.width, props.height));
     setRunning(false);
     setStep(0);
   }
@@ -110,11 +107,11 @@ export default function GameOfLife(props) {
   }
 
   const randomise = () => {
-    let rows = Array(props.size);
+    let rows = Array(props.height);
     for (let i = 0; i < rows.length; i++) {
-      rows[i] = Array(props.size);
+      rows[i] = Array(props.width);
       for (let j = 0; j < rows[i].length; j++) {
-        rows[i][j] = Math.random() > 0.85;
+        rows[i][j] = Math.random() > 1 - proportion / 100;
       }
     }
 
@@ -126,13 +123,25 @@ export default function GameOfLife(props) {
     setColor(color);
   }
 
+  const handleSetProportion = (value) => {
+    let newValue = value;
+    if (newValue > 100) {
+      newValue = 100;
+    } else if (newValue < 0) {
+      newValue = 0;
+    }
+
+    setProportion(newValue);
+  }
+
   return (
-    <div>
+    <>
       <Grid
         handleClick={(i, j) => handleSquareClick(i, j)}
         handleMouseOver={(i, j) => handleMouseOver(i, j)}
         color={color}
-        size={props.size}
+        height={props.height}
+        width={props.width}
         squares={squares} />
       <div className="controls">
         <div>
@@ -141,6 +150,11 @@ export default function GameOfLife(props) {
           <button onClick={() => reset()} disabled={running}>Reset</button>
           <button onClick={() => clearGrid()} disabled={running}>Clear</button>
           <button onClick={() => randomise()} disabled={running}>Random</button>
+          <span>
+            <label>Proportion: </label>
+            <input type="number" min={0} max={100} defaultValue={proportion} onChange={(event) => handleSetProportion(event.currentTarget.value)} />
+            %
+          </span>
         </div>
         <div>
           <button onClick={() => changeColor("red")}>Red</button>
@@ -150,13 +164,15 @@ export default function GameOfLife(props) {
           <button onClick={() => changeColor("orange")}>Orange</button>
         </div>
       </div>
-
-      <br />
-      <label htmlFor="speed-slider">Speed</label>
-      <input type="range" min="1" max="20" defaultValue={speed} step="1" id="speed-slider" onChange={(event) => updateTimer(event.currentTarget.value)} />
-      <p>Step [{step}]</p>
-      <p>Speed: {speed}</p>
-    </div>
+      <div>
+        <p>
+          <label>Speed: </label>
+          {speed}<br />
+          <input type="range" min="1" max="20" defaultValue={speed} step="1" id="speed-slider" onChange={(event) => setSpeed(event.currentTarget.value)} />
+        </p>
+        <p>Step [{step}]</p>
+      </div>
+    </>
   )
 
 }

@@ -50,6 +50,7 @@ s.live {
   font-weight: bold;
   background-color: rgb(0, 64, 107);
   text-shadow: 1px 1px grey;
+  width: 140px;
 }
 
 .controls button.start {
