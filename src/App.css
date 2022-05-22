@@ -19,7 +19,7 @@ s.live {
 }
 
 .yellow s.live {
-  background-color:  rgb(255, 251, 22);
+  background-color:  rgb(240, 236, 0);
 }
 
 .green s.live {
@@ -30,12 +30,32 @@ s.live {
   background-color:  rgb(239, 117, 255);
 }
 
-button {
-  padding: 5px;
-  margin: 5px;
-  font-weight: bold;
-}
-
 #grid {
   white-space: nowrap;
+}
+
+.controls button[disabled] {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.controls button {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 32px;
+  margin: 5px 2px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: rgb(0, 64, 107);
+  text-shadow: 1px 1px grey;
+}
+
+.controls button.start {
+  background-color: green;
+}
+
+.controls button.stop {
+  background-color: red;
 }
